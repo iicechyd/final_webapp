@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Web/Mobile Check name student And Q&A</title>
+    <title>Check List Name And Q&A</title>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
@@ -27,7 +27,6 @@
         body{
           font-family: "Helvetica Neue",Helvetica,Arial;
         }
-
     </style>
 </head>
   <body>
@@ -46,7 +45,6 @@
             draggable="false"
             height="30"
         ></a>
-
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav ms-auto align-items-center">
                 <form class="nav-item ms-3" role="login">
@@ -76,50 +74,23 @@
                           {{user.email}}<br/>
                       </div>
                   </template>
-
                 </v-card-actions>
-                <div  class="pa-2">
-                    <br><img src="checklist.jpg" width="600" height="300" class="image-container">
-                </div>
                 
-                <div id="app" class="login_students">
-                  <v-app>
+                <div  class="pa-2">
+                  <br><img src="checklist.jpg" width="600" height="320" class="image-container">
+              </div>
+              
+                <div id="app" class="login_students" style="text-align: center;">
                     <div v-for="(s) in students"> 
                       <v-btn v-if="user.email == s.email" style="background-color: #051094; color: white; margin-top:20px">
                         <a href="students_page.html" style="color: white; text-decoration: none;">สำหรับนักเรียน</a></v-btn> 
-                      </v-app>
                     </div>  
 
-                 <div id="app" class="login_teachers">
-                  <v-app>
+                 <div id="app" class="login_teachers" style="text-align: center;">
                     <div v-for="(t) in teachers">
                       <v-btn v-if="user.email == t.email" style="background-color: #051094; color: white; margin-top:20px">
                       <a href="teachers_page.html" style="color: white; text-decoration: none;">สำหรับคุณครู</a></v-btn>
-                    </v-app>
                 </div> 
-          </v-card-actions>
-
-            </v-card>
-            <v-card v-if="editmode">
-                <v-card-text class="pa-6">
-                    <v-card-title style="background-color: '#051094', color: 'white'">{{editmode}}</v-card-title>
-                    <v-text-field v-model="editstd.id" label="รหัส"></v-text-field>
-                    <v-combobox v-model="editstd.title" label="คำนำหน้า" :items="['นาย','นางสาว','ด.ช.','ด.ญ']"></v-combobox>
-                    <v-text-field v-model="editstd.fname" label="ชื่อ"></v-text-field>
-                    <v-text-field v-model="editstd.lname" label="นามสกุล"></v-text-field>
-                    <v-text-field v-model="editstd.email" label="E-mail"></v-text-field>
-                    <v-text-field v-model="editstd.section" label="Section"></v-text-field>
-               </v-card-text>
-               <v-card-actions>
-
-                    <v-btn @click="savedata()">Save</v-btn>
-                    <v-btn @click="editmode=0">Cancel</v-btn>
-               </v-card-actions>
-             </v-card>
-                      
-          <div class="pa-6 text-center">{{footer}}</div>
-        </v-container>        
-      </v-app>
         <v-card-actions>
             <template v-if="user">
             <div class="pa-2">
@@ -144,7 +115,11 @@
     </v-card-actions>
 
     </div>
-    
+    <div
+      class="text-center p-3"
+      style="background-color: rgba(0, 0, 0, 0.2)"
+      >© 2024 Copyright: Group. Need to sleep<a class="text-dark">
+    </div>
  
     <script>
       const vuetify = Vuetify.createVuetify();
@@ -162,7 +137,7 @@
       const app = Vue.createApp({
         data() {
           return {
-            title: "Web/Mobile Check name student And Q&A",
+            title: "Check List Name And Q&A",
             footer: "",
             students: [],
             editstd: {},
@@ -198,11 +173,8 @@
                 stdlist.push({ id: doc.id, ...doc.data() });
                 });
                 this.students = stdlist;
-            });
-            
+            });    
         },
-        
-
 
         methods: {
             autoRead() {

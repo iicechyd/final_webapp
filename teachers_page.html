@@ -14,7 +14,21 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <title>Teachers Page</title>
+    <style>
+      .image-container {
+          margin-right: 150px;
+          margin-left: 280px;
+          border-radius: 5%;
+      }
+      .navbar-light .navbar-nav .nav-link {
+        color: #000;
+      }
+
+      body{
+        font-family: "Helvetica Neue",Helvetica,Arial;
+      }
+  </style>
+    <title>หน้าสำหรับคุณครู</title>
 </head>
 <body>
   <div id="app" class="centered-login">
@@ -50,7 +64,7 @@
             <v-container>
                 <v-card>
                     <v-card-title style="background-color: #051094; color: white">{{title}}</v-card-title>
-                      <v-card-actions >
+                      <v-card-actions class="text-xs-right">
                         <template v-if="user">
                           <div class="pa-2">
                               <v-avatar><img :src="user.photoURL" /></v-avatar>
@@ -103,10 +117,11 @@
                 </v-card>
                 
                 <v-card-text class="pa-6" v-if="editmode==='เช็คคำตอบ'">
+                  <v-card-title style="background-color: #051094; color: white">{{editmode}}</v-card-title>
                     <table width="100%" >
                         <thead>
                           <tr>
-                            <td>รหัสการเข้าเรียน</td>
+                            <td>รหัสนักเรียน</td>
                             <td>คำตอบ</td>
                             <td>วิชา</td>
                             <td>ห้องเรียน</td>
@@ -123,12 +138,13 @@
                             <td>{{c.class_date}}</td>
                             <td>
                             </td>
-                            <td><v-btn @click="deletesed(c)"><v-icon icon="mdi-account-remove"></v-icon></v-btn></td>
+                            <td><v-btn @click="deletesed(c)"><v-icon icon="mdi-delete-forever"></v-icon></v-btn></td>
                           </tr>
                         </tbody>
                       </table>
                 </v-card-text>
                 <v-card-text class="pa-6" v-if="editmode==='แสดงคำถามทั้งหมด'">
+                  <v-card-title style="background-color: #051094; color: white">{{editmode}}</v-card-title>
                     <table width="100%" >
                         <thead>
                           <tr>
@@ -143,9 +159,9 @@
                             <td>{{user.displayName}}</td>
                             <td>{{q.quiz_name}}</td>
                             <td>
-                                <v-btn @click="editqz(q)"><v-icon icon="mdi-account-edit"></v-icon></v-btn>
+                                <v-btn @click="editqz(q)"><v-icon icon="mdi-tooltip-edit"></v-icon></v-btn>
                             </td>
-                            <td><v-btn @click="deleteqiz(q)"><v-icon icon="mdi-account-remove"></v-icon></v-btn></td>
+                            <td><v-btn @click="deleteqiz(q)"><v-icon icon="mdi-delete-forever"></v-icon></v-btn></td>
                           </tr>
                         </tbody>
                       </table>
@@ -154,14 +170,14 @@
                 <v-card v-if="editmode==='เพิ่มนักเรียน'">
                     <v-card-text class="pa-6">
                         <v-card-title style="background-color: #051094; color: white">{{editmode}}</v-card-title>
-                        <v-text-field v-model="editstd.id" label="รหัส"></v-text-field>
+                        <v-text-field v-model="editstd.id" label="รหัสนักศึกษา"></v-text-field>
                         <v-combobox v-model="editstd.title" label="คำนำหน้า" :items="['นาย','นางสาว','ด.ช.','ด.ญ']"></v-combobox>
                         <v-text-field v-model="editstd.fname" label="ชื่อ"></v-text-field>
                         <v-text-field v-model="editstd.lname" label="นามสกุล"></v-text-field>
                         <v-text-field v-model="editstd.email" label="E-mail"></v-text-field>
                         <v-text-field v-model="editstd.section" label="Section"></v-text-field>
                    </v-card-text>
-                   <v-card-actions>
+                   <v-card-actions class="d-flex justify-center">
                         <v-btn @click="savedata()" class="btn btn-outline-success">บันทึก</v-btn>
                         <v-btn @click="editmode=0" class="btn btn-outline-danger">ยกเลิก</v-btn>
                    </v-card-actions>
@@ -173,14 +189,18 @@
                         <v-text-field v-model="editquiz.id" label="รหัสการเข้าเรียน" value="Auto-ID"></v-text-field>
                         <v-text-field v-model="editquiz.quiz_name" label="คำถาม"></v-text-field>
                       </v-card-text>
-                   <v-card-actions>
+                   <v-card-actions class="d-flex justify-center">
                         <v-btn @click="saveqiz()"class="btn btn-outline-success">บันทึก</v-btn>
                         <v-btn @click="editmode=0"class="btn btn-outline-danger">ยกเลิก</v-btn>
                    </v-card-actions>
                  </v-card>
 
-                          
-              <div class="pa-6 text-center">{{footer}}</div>
+                 <div
+                 class="text-center p-3"
+                 style="background-color: rgba(0, 0, 0, 0.2)"
+                 >© 2024 Copyright: Group. Need to sleep<a class="text-dark">
+               </div>
+            </div>
             </v-container>        
           </v-app>
     </div>
@@ -201,7 +221,7 @@
           data() {
             return {
               title: "สำหรับคุณครู",
-              footer: "",
+              footer: "NEED TO SLEEP",
               students: [],
               editstd: {},
               editquiz: {},
