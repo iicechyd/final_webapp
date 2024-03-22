@@ -24,42 +24,37 @@
           color: #000;
         }
 
+        body{
+          font-family: "Helvetica Neue",Helvetica,Arial;
+        }
+
     </style>
 </head>
   <body>
+    <div id="app" class="centered-login">
+      <v-app>
     <!-- Navbar -->
+    <v-container>  
+        <v-container class="con">
     <nav class="navbar navbar-expand-lg fixed-top bg-light navbar-light">
       <div class="container">
-        <a class="navbar-brand" href="#"
+        <a class="navbar-brand"
           ><img
-            id="MDB-logo"
-            src="https://mdbcdn.b-cdn.net/wp-content/uploads/2018/06/logo-mdb-jquery-small.png"
-            alt="MDB Logo"
+            id="CP-logo"
+            src="assets/img/cp.png"
+            alt="CP Logo"
             draggable="false"
             height="30"
-        /></a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-mdb-toggle="collapse"
-          data-mdb-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <i class="fas fa-bars"></i>
-        </button>
+        ></a>
+
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav ms-auto align-items-center">
-            <li class="nav-item ms-3">
-              <form class="d-flex" role="login">
-                <v-btn @click="google_login()" v-if="!user" class="btn btn-black btn-rounded">Sign in</a>
-                <div v-if="user"
-                  <v-btn @click="google_logout()" v-if="user" class="btn logout-button"flat text>Logout</v-btn>    
-                  <v-avatar><img :src="user.photoURL" /></v-avatar>    
+                <form class="nav-item ms-3" role="login">
+                <v-btn @click="google_login()" v-if="!user" class="btn btn-black btn-rounded" flat text>Log in</v-btn> 
+                <div v-if="user">
+                  <v-btn @click="google_logout()" v-if="user" class="btn btn-black btn-rounded" flat text>Logout</v-btn>    
                 </div>
               </form>
-            </li>
           </ul>
         </div>
       </div>
@@ -81,32 +76,25 @@
                           {{user.email}}<br/>
                       </div>
                   </template>
-                </v-card-actions>
 
+                </v-card-actions>
                 <div  class="pa-2">
                     <br><img src="checklist.jpg" width="600" height="300" class="image-container">
                 </div>
-
-                <v-card-actions>
+                
+                <div id="app" class="centered-login">
+                  <v-app>
                     <v-row justify="center">
-                    <v-btn @click="google_login()" v-if="!user" style="background-color: #051094; color: white">เข้าสู่ระบบ</v-btn>
-                    <div v-if="user">
-                      <v-btn @click="google_logout()" v-if="user" class="btn btn-danger" style="margin-right: 1em;">ออกจากระบบ</v-btn>   
-                          <div style="display: inline-block;">
-                            <div v-for="(s) in students" style="display: inline-block; margin-right: 1em;"> 
-                                <v-btn v-if="user.email == s.email" style="background-color: #051094; color: white;">
-                                  <a href="students_page.html" style="color: white; text-decoration: none;">สำหรับนักเรียน</a>
-                                </v-btn>
-                              </div>
-                            </div>
-                            <div style="display: inline-block;">
-                            <div v-for="(t) in teachers" style="display: inline-block; margin-right: 1em;">
-                            <v-btn v-if="user.email == t.email" style="background-color: #051094; color: white;">
-                          <a href="teachers_page.html" style="color: white; text-decoration: none;">สำหรับคุณครู</a>
-                        </v-btn>
-                      </div>   
-                    </div>  
-                </v-card-actions>
+                    <div v-for="(s) in students"> 
+                      <v-btn v-if="user.email == s.email" style="background-color: #051094; color: white;">
+                        <a href="students_page.html" style="color: white; text-decoration: none;">สำหรับนักเรียน</a></v-btn>
+                <div v-for="(t) in teachers">
+                  <v-btn v-if="user.email == t.email" style="background-color: #051094; color: white;">
+                    <a href="teachers_page.html" style="color: white; text-decoration: none;">สำหรับคุณครู</a>
+                  </v-btn>
+                </div>   
+              </div>   
+          </v-card-actions>
 
             </v-card>
             <v-card v-if="editmode">
