@@ -17,6 +17,34 @@
     <title>Students Page</title>
 </head>
 <body>
+  <div id="app" class="centered-login">
+    <v-app>
+  <!-- Navbar -->
+  <v-container>  
+      <v-container class="con">
+  <nav class="navbar navbar-expand-lg fixed-top bg-light navbar-light">
+    <div class="container">
+      <a class="navbar-brand"
+        ><img
+          id="CP-logo"
+          src="assets/img/cp.png"
+          alt="CP Logo"
+          draggable="false"
+          height="30"
+      ></a>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ms-auto align-items-center">
+              <form class="nav-item ms-3" role="login">
+              <div v-if="user">
+                <v-btn @click="google_logout()" v-if="user" class="btn btn-black btn-rounded" flat text>Logout</v-btn>    
+              </div>
+            </form>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <!-- Navbar -->
     <div id = "app">
         <v-app>
             <v-container>
@@ -46,8 +74,8 @@
                             </div>จงเติมคำตอบลงช่องว่าง <v-text-field v-model="editcheckin.qiz_send" label="คำตอบ"></v-text-field>
                        </v-card-text>
                        <v-card-actions>
-                            <v-btn @click="saveqiz_confirm()">บันทึกคำตอบ</v-btn>
-                            <v-btn @click="editmode=0">ยกเลิก</v-btn>
+                            <v-btn @click="saveqiz_confirm()" class="btn btn-outline-success">บันทึกคำตอบ</v-btn>
+                            <v-btn @click="editmode=0" class="btn btn-outline-danger">ยกเลิก</v-btn>
                        </v-card-actions>
                      </v-card>
     
@@ -55,12 +83,6 @@
                         <v-btn @click="sendob()" style="background-color: #051094; color: white">เช็คชื่อ</v-btn>
                     </v-card-actions>              
     
-                    <v-card-actions>
-                        <v-btn @click="google_login()" v-if="!user">เข้าสู่ระบบ</v-btn>
-                        <div v-if="user">
-                          <v-btn @click="google_logout()" v-if="user" class="btn btn-danger">ออกจากระบบ</v-btn>   
-                        </div>                     
-                    </v-card-actions>
                 </v-card>            
                           
               <div class="pa-6 text-center">{{footer}}</div>
@@ -188,12 +210,12 @@
                     db.collection("checkin").doc(this.editcheckin.id).set(this.editcheckin);
               },
               deleteData(std) {
-                  if (confirm("ต้องการลบข้อมูล")) {
+                  if (confirm("ต้องการลบข้อมูล?")) {
                   db.collection("students").doc(std.id).delete();
                   }
               },
               deleteqiz(qiz) {
-                if (confirm("ต้องการลบข้อมูล")) {
+                if (confirm("ต้องการลบข้อมูล?")) {
                 db.collection("quiz").doc(qiz.id).delete();
                 }
             },

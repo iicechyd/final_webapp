@@ -82,18 +82,21 @@
                     <br><img src="checklist.jpg" width="600" height="300" class="image-container">
                 </div>
                 
-                <div id="app" class="centered-login">
+                <div id="app" class="login_students">
                   <v-app>
-                    <v-row justify="center">
                     <div v-for="(s) in students"> 
-                      <v-btn v-if="user.email == s.email" style="background-color: #051094; color: white;">
-                        <a href="students_page.html" style="color: white; text-decoration: none;">สำหรับนักเรียน</a></v-btn>
-                <div v-for="(t) in teachers">
-                  <v-btn v-if="user.email == t.email" style="background-color: #051094; color: white;">
-                    <a href="teachers_page.html" style="color: white; text-decoration: none;">สำหรับคุณครู</a>
-                  </v-btn>
-                </div>   
-              </div>   
+                      <v-btn v-if="user.email == s.email" style="background-color: #051094; color: white; margin-top:20px">
+                        <a href="students_page.html" style="color: white; text-decoration: none;">สำหรับนักเรียน</a></v-btn> 
+                      </v-app>
+                    </div>  
+
+                 <div id="app" class="login_teachers">
+                  <v-app>
+                    <div v-for="(t) in teachers">
+                      <v-btn v-if="user.email == t.email" style="background-color: #051094; color: white; margin-top:20px">
+                      <a href="teachers_page.html" style="color: white; text-decoration: none;">สำหรับคุณครู</a></v-btn>
+                    </v-app>
+                </div> 
           </v-card-actions>
 
             </v-card>
