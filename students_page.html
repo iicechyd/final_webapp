@@ -79,7 +79,7 @@
                         <v-card-text class="pa-6">
                             <v-card-title style="background-color: #051094; color: white">{{editmode}}</v-card-title>
                             <v-text-field v-model="editcheckin.id" label="รหัสนักศึกษา" ></v-text-field>
-                            <v-text-field type="datetime-local" v-model="editcheckin.class_date" label="เวลา"></v-text-field>
+                            <v-text-field type="datetime-local" v-model="editcheckin.class_date" readonly label="เวลา"></v-text-field>
                             <v-text-field v-model="editcheckin.room" label="ห้องเรียน"></v-text-field>
                             <v-text-field v-model="editcheckin.subject" label="วิชา"></v-text-field>
                             <div  v-for="(q) in quiz" class="pa-2"> 
@@ -187,6 +187,16 @@
                   })
                 }
               },
+              getCurrentDateTime() {
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                return `${year}-${month}-${day}T${hours}:${minutes}`;
+              },
+            
               autoRead() {
                   db.collection("students").onSnapshot((querySnapshot) => {
                   var stdlist = [];
@@ -219,13 +229,12 @@
             },
             sendob(){
                 this.editmode = "แบบฟอร์มเช็คชื่อ";
-                this.editcheckin={};
+                this.editcheckin={id: '', class_date: this.getCurrentDateTime(), room: '', subject: '', quiz_send: ''};
             },
             saveqiz_confirm() {
               if (confirm("คุณแน่ใจหรือไม่ที่ต้องการบันทึกคำตอบ?")) {
                     this.saveqiz_back();
                     this.editmode = 0;
-                  } else {
                     this.editcheckin = {};
                 }
               },
