@@ -229,6 +229,7 @@
             },
             sendob(){
                 this.editmode = "แบบฟอร์มเช็คชื่อ";
+                this.getstudent(this.user.email);
                 this.editcheckin={id: '', class_date: this.getCurrentDateTime(), room: '', subject: '', quiz_send: ''};
             },
             saveqiz_confirm() {
@@ -271,7 +272,7 @@
                 .then(
                   (querySnapshot) => {
                    querySnapshot.forEach((doc) => {
-                    this.ustudent = { id: doc.id, ...doc.data() };
+                    this.editcheckin.id = doc.id;
                   });
                  }
               );
