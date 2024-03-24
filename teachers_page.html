@@ -110,8 +110,8 @@
                         <v-btn @click="addData()" class="btn btn-outline-primary" >เพิ่มข้อมูล</v-btn>
                         <v-btn @click="addDataqiz()" class="btn btn-outline-primary">เพิ่มคำถาม</v-btn>
                         <v-btn @click="checksend()" class="btn btn-outline-primary" >ข้อมูลเช็คชื่อ</v-btn>
-                        <v-btn @click="checkanswer()" class="btn btn-outline-primary" >เช็คคำตอบ</v-btn>
-                        <v-btn @click="showsubject()" class="btn btn-outline-primary" >เช็คคำถามทั้งหมด</v-btn>
+                        <v-btn @click="checkanswer()" class="btn btn-outline-primary" >แสดงคำตอบ</v-btn>
+                        <v-btn @click="showsubject()" class="btn btn-outline-primary" >แสดงคำถามทั้งหมด</v-btn>
                     </v-card-actions>
                     
                    
@@ -123,6 +123,7 @@
                         <thead>
                           <tr>
                             <td>รหัสนักเรียน</td>
+                            <td>รหัสการเข้าเรียน</td>
                             <td>วิชา</td>
                             <td>ห้องเรียน</td>
                             <td>เวลา</td>
@@ -132,6 +133,7 @@
                         <tbody>
                           <tr v-for="(c) in checkin">
                             <td>{{c.id}}</td>
+                            <td>{{c.classid}}</td>
                             <td>{{c.subject}}</td>
                             <td>{{c.room}}</td>
                             <td>{{c.class_date}}</td>
@@ -143,7 +145,7 @@
                       </table>
                 </v-card-text>
 
-                <v-card-text class="pa-6" v-if="editmode==='เช็คคำตอบ'">
+                <v-card-text class="pa-6" v-if="editmode==='แสดงคำตอบ'">
                   <v-card-title style="background-color: #051094; color: white">{{editmode}}</v-card-title>
                     <table width="100%" >
                         <thead>
@@ -172,7 +174,8 @@
                     <table width="100%" >
                         <thead>
                           <tr>
-                            <td>ชื่อคุณครู</td>
+                            <td>คุณครูผู้ถาม</td>
+                            <td>รหัสการเข้าเรียน</td>
                             <td>คำถาม</td>
                             <td>แก้ไข</td>
                             <td>ลบ</td>
@@ -181,6 +184,7 @@
                         <tbody>
                           <tr v-for="(q) in quiz">
                             <td>{{user.displayName}}</td>
+                            <td>{{q.quiz_id}}</td>
                             <td>{{q.quiz_name}}</td>
                             <td>
                                 <v-btn @click="editqz(q)"><v-icon icon="mdi-tooltip-edit"></v-icon></v-btn>
@@ -210,7 +214,7 @@
                  <v-card v-if="editmode==='เพิ่มคำถาม'">
                     <v-card-text class="pa-6">
                         <v-card-title style="background-color: #051094; color: white">{{editmode}}</v-card-title>
-                        <v-text-field v-model="editquiz.id" label="รหัสการเข้าเรียน" value="Auto-ID"></v-text-field>
+                        <v-text-field v-model="editquiz.quiz_id" label="รหัสการเข้าเรียน" :value="generateRandomID()" readonly></v-text-field>
                         <v-text-field v-model="editquiz.quiz_name" label="คำถาม"></v-text-field>
                       </v-card-text>
                    <v-card-actions class="d-flex justify-center">
@@ -342,6 +346,9 @@
                     this.editstd = std;
                     this.editmode = "edit";
                 },
+              generateRandomID() {
+                return Math.floor(100000 + Math.random() * 900000);
+              },
               edit(std){
                   this.editstd = std;
                   this.editmode = "เพิ่มนักเรียน";
@@ -349,16 +356,16 @@
               editqz(quiz){
                 this.editquiz = quiz;
                 this.editmode = "เพิ่มคำถาม";
-            },
+              },
               checksend(){
                 this.editmode = "ข้อมูลเช็คชื่อ";
-            },
-            checkanswer(){
-              this.editmode = "เช็คคำตอบ";
-          },
-            showsubject(){
+             },
+              checkanswer(){
+                this.editmode = "แสดงคำตอบ";
+              },
+              showsubject(){
                 this.editmode = "แสดงคำถามทั้งหมด";
-            },
+             },
               savedata(){
                   if (confirm("ต้องการบันทึกข้อมูล?")) {
                   db.collection("students").doc(this.editstd.id).set(this.editstd);
@@ -366,9 +373,10 @@
               },
               saveqiz(){
                   if (confirm("ต้องการบันทึกข้อมูล?")) {
+                  this.editquiz.quiz_id = this.generateRandomID();
                   db.collection("quiz").doc(this.editquiz.id).set(this.editquiz);
                   }
-              },
+                },
               deleteData(std) {
                   if (confirm("ต้องการลบข้อมูล?")) {
                   db.collection("students").doc(std.id).delete();
