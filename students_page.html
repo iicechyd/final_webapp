@@ -81,25 +81,38 @@
                             <v-text-field v-model="editcheckin.id" label="รหัสนักศึกษา" ></v-text-field>
                             <v-text-field type="datetime-local" v-model="editcheckin.class_date" readonly label="เวลา"></v-text-field>
                             <v-text-field v-model="editcheckin.room" label="ห้องเรียน"></v-text-field>
-                            <v-text-field v-model="editcheckin.subject" label="วิชา"></v-text-field>
-                            <div  v-for="(q) in quiz" class="pa-2"> 
-                                 <h2>
-                                    <h2>{{q.quiz_name}}</h2>
-                                </h2>
-                            </div>จงเติมคำตอบลงช่องว่าง <v-text-field v-model="editcheckin.qiz_send" label="คำตอบ"></v-text-field>
+                            <v-text-field v-model="editcheckin.subject" label="วิชา"></v-text-field>  
                        </v-card-text>
                        <v-card-actions class="d-flex justify-center">
                             <v-btn @click="saveqiz_confirm()" class="btn btn-outline-success">บันทึกคำตอบ</v-btn>
                             <v-btn @click="editmode=0" class="btn btn-outline-danger">ยกเลิก</v-btn>
                        </v-card-actions>
                      </v-card>
-    
+
+                     <v-card v-if="editmode==='แบบฟอร์มตอบคำถาม'">
+                      <v-card-text class="pa-6">
+                          <v-card-title style="background-color: #051094; color: white">{{editmode}}</v-card-title>
+                          <v-text-field v-model="editanswer.id" label="รหัสนักศึกษา" ></v-text-field>
+                          <v-text-field type="datetime-local" v-model="editanswer.answer_date" readonly label="เวลา"></v-text-field>
+                          <div  v-for="(q) in quiz" class="pa-2"> 
+                               <h2>
+                                  <h2>{{q.quiz_name}}</h2>
+                              </h2>
+                          </div>จงเติมคำตอบลงช่องว่าง <v-text-field v-model="editanswer.answer_send" label="คำตอบ"></v-text-field>
+                     </v-card-text>
+                     <v-card-actions class="d-flex justify-center">
+                          <v-btn @click="saveanswer_confirm()" class="btn btn-outline-success">บันทึกคำตอบ</v-btn>
+                          <v-btn @click="editmode=0" class="btn btn-outline-danger">ยกเลิก</v-btn>
+                     </v-card-actions>
+                   </v-card>
+
                      <div  class="pa-2">
                       <br><img src="checklist.jpg" width="600" height="320" class="image-container">
                   </div>
 
                      <v-card-actions class="d-flex justify-center">
                         <v-btn @click="sendob()" style="background-color: #051094; color: white" >เช็คชื่อ</v-btn>
+                        <v-btn @click="answer()" style="background-color: #051094; color: white" >ตอบคำถาม</v-btn>
                     </v-card-actions>              
     
                 </v-card>            
@@ -135,6 +148,7 @@
               editstd: {},
               editquiz: {},
               quiz: [],
+              editanswer: {},
               editcheckin:{},
               editmode: 0,
               teachers: [],
@@ -242,6 +256,21 @@
               saveqiz_back(){
                     db.collection("checkin").doc(this.editcheckin.id).set(this.editcheckin);
               },
+              answer(){
+                this.editmode = "แบบฟอร์มตอบคำถาม";
+                this.getstudent(this.user.email);
+                this.editanswer={id: '', answer_date: this.getCurrentDateTime(), answer_send: ''};
+            },
+            saveanswer_confirm() {
+              if (confirm("คุณแน่ใจหรือไม่ที่ต้องการบันทึกคำตอบ?")) {
+                    this.saveanswer_back();
+                    this.editmode = 0;
+                    this.editanswer = {};
+                }
+              },
+              saveanswer_back(){
+                db.collection("answer").doc(this.editanswer.id).set(this.editanswer);
+            },
               deleteData(std) {
                   if (confirm("ต้องการลบข้อมูล?")) {
                   db.collection("students").doc(std.id).delete();
@@ -273,6 +302,7 @@
                   (querySnapshot) => {
                    querySnapshot.forEach((doc) => {
                     this.editcheckin.id = doc.id;
+                    this.editanswer.id = doc.id;
                   });
                  }
               );

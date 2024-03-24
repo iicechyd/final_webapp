@@ -109,20 +109,20 @@
                     <v-card-actions class="d-flex justify-center">
                         <v-btn @click="addData()" class="btn btn-outline-primary" >เพิ่มข้อมูล</v-btn>
                         <v-btn @click="addDataqiz()" class="btn btn-outline-primary">เพิ่มคำถาม</v-btn>
-                        <v-btn @click="cheksend()" class="btn btn-outline-primary" >เช็คคำตอบ</v-btn>
+                        <v-btn @click="checksend()" class="btn btn-outline-primary" >ข้อมูลเช็คชื่อ</v-btn>
+                        <v-btn @click="checkanswer()" class="btn btn-outline-primary" >เช็คคำตอบ</v-btn>
                         <v-btn @click="showsubject()" class="btn btn-outline-primary" >เช็คคำถามทั้งหมด</v-btn>
                     </v-card-actions>
                     
                    
                 </v-card>
                 
-                <v-card-text class="pa-6" v-if="editmode==='เช็คคำตอบ'">
+                <v-card-text class="pa-6" v-if="editmode==='ข้อมูลเช็คชื่อ'">
                   <v-card-title style="background-color: #051094; color: white">{{editmode}}</v-card-title>
                     <table width="100%" >
                         <thead>
                           <tr>
                             <td>รหัสนักเรียน</td>
-                            <td>คำตอบ</td>
                             <td>วิชา</td>
                             <td>ห้องเรียน</td>
                             <td>เวลา</td>
@@ -132,7 +132,6 @@
                         <tbody>
                           <tr v-for="(c) in checkin">
                             <td>{{c.id}}</td>
-                            <td>{{c.qiz_send}}</td>
                             <td>{{c.subject}}</td>
                             <td>{{c.room}}</td>
                             <td>{{c.class_date}}</td>
@@ -143,6 +142,31 @@
                         </tbody>
                       </table>
                 </v-card-text>
+
+                <v-card-text class="pa-6" v-if="editmode==='เช็คคำตอบ'">
+                  <v-card-title style="background-color: #051094; color: white">{{editmode}}</v-card-title>
+                    <table width="100%" >
+                        <thead>
+                          <tr>
+                            <td>รหัสนักเรียน</td>
+                            <td>คำตอบ</td>
+                            <td>เวลา</td>
+
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr v-for="(a) in answer">
+                            <td>{{a.id}}</td>
+                            <td>{{a.answer_send}}</td>
+                            <td>{{a.answer_date}}</td>
+                            <td>
+                            </td>
+                            <td><v-btn @click="deleteans(a)"><v-icon icon="mdi-delete-forever"></v-icon></v-btn></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                </v-card-text>
+
                 <v-card-text class="pa-6" v-if="editmode==='แสดงคำถามทั้งหมด'">
                   <v-card-title style="background-color: #051094; color: white">{{editmode}}</v-card-title>
                     <table width="100%" >
@@ -231,6 +255,7 @@
               user: null,
               ustudent: null,
               checkin:[],
+              answer:[],
             };
           },
   
@@ -277,6 +302,14 @@
                   });
                   this.checkin = checkinlist;
               });
+              db.collection("answer") .get()
+              .then((querySnapshot) => {
+                  var answerlist = [];
+                  querySnapshot.forEach((doc) => {
+                    answerlist.push({ id: doc.id, ...doc.data() });
+                  });
+                  this.answer = answerlist;
+              });
           },
           
           methods: {
@@ -317,9 +350,12 @@
                 this.editquiz = quiz;
                 this.editmode = "เพิ่มคำถาม";
             },
-              cheksend(){
-                this.editmode = "เช็คคำตอบ";
+              checksend(){
+                this.editmode = "ข้อมูลเช็คชื่อ";
             },
+            checkanswer(){
+              this.editmode = "เช็คคำตอบ";
+          },
             showsubject(){
                 this.editmode = "แสดงคำถามทั้งหมด";
             },
@@ -343,13 +379,17 @@
                 db.collection("checkin").doc(std.id).delete();
                 }
             },
+              deleteans(std){
+                if (confirm("ต้องการลบข้อมูล?")) {
+                  db.collection("answer").doc(std.id).delete();
+                  }
+              },
               deleteqiz(qiz) {
                 if (confirm("ต้องการลบข้อมูล?")) {
                 db.collection("quiz").doc(qiz.id).delete();
                 }
             },
               google_login() {
-              // Using a popup.
               var provider = new firebase.auth.GoogleAuthProvider();
               provider.addScope("profile");
               provider.addScope("email");
